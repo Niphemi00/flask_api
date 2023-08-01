@@ -1,14 +1,14 @@
 from flask import Flask, request
 from flask_sqlalchemy import SQLAlchemy
-from flask_restful import Api, Resource
-import requests
+# from flask_restful import Api, Resource
+# import requests
 
 app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///market.db'
 db = SQLAlchemy(app)
-api = Api(app)
-BASE = 'http:127.0.0.1:5000/'
-response = requests.get(BASE + 'helloworld')
+# api = Api(app)
+# BASE = 'http:127.0.0.1:5000/'
+# response = requests.get(BASE + 'helloworld')
 
 
 class GoodsDetails(db.Model):
@@ -21,17 +21,18 @@ class GoodsDetails(db.Model):
     def __repr__(self):
         return f'{self.name} goes for {self.price}'
 
+#
+# class APIdetails(Resource):
+#     def get(self):
+#         return {'msg': 'hello world'}
 
-class APIdetails(Resource):
-    def get(self):
-        return {'msg': 'hello world'}
 
 
-api.add_resource(APIdetails, '/helloworld')
+# api.add_resource(APIdetails, '/helloworld')
 
 
 # GET ALL THE GOODS IN THE DB
-@app.route('/goods', methods=['GET'])
+@app.route('/goods')
 def get_goods():
     goods = GoodsDetails.query.all()
     group = []
@@ -43,7 +44,7 @@ def get_goods():
 
 
 # GET GOOD DETAILS BY ID
-@app.route('/goods/<id>', methods=['GET'])
+@app.route('/goods/<id>')
 def get_goods_by_id(id):
     goods = GoodsDetails.query.get_or_404(id)
     return {'id': goods.id, 'name': goods.name, 'description': goods.description, 'price': goods.price}
